@@ -6,7 +6,7 @@ Grid::Grid (int xDimension, int yDimension)
 	width = xDimension;
 	height = yDimension;
 	//Resize the grid to accomadate user-provided dimensions.
-	cells.resize(height, vector<char>(width, ' ') );
+	cells.resize(height, vector<Cell>(width, Cell()) );
 }
 
 void Grid::print ()
@@ -15,13 +15,18 @@ void Grid::print ()
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			cout << cells[i][j];
+			if(cells[i][j].alive == true)
+				cout << 'x';
+			else
+				cout << ' ';
 		}
 		cout << endl;
 	}
 }
 
 // Advance the simulation one generation.
+// First, check for any cells who need to change states.
+// Lastly, change all of these states simultaneously.
 void Grid::step ()
 {
 	for (int i = 0; i < height; ++i)
@@ -30,14 +35,14 @@ void Grid::step ()
 		{
 			//TESTING:
 			if(i > 4 && i < 7 && j > 4 && j < 9)
-				cells[i][j] = 'x';
+				cells[i][j].alive = true;
 
-			if(cells[i][j] == ' ') //Cell is dead
+			if(cells[i][j].alive == false) // Cell is dead
 			{
 				if(findLiveNeighbors(i, j) == 3)
-					cells[i][j] = 'x';
+					cells[i][j].alive = true;
 			}
-			else //Cell is alive
+			else // Cell is alive
 			{
 
 			}
@@ -62,7 +67,7 @@ int Grid::findLiveNeighbors(int row, int column)
 			if(column + j < 0 || column + j >= width) // Out of column bounds
 				continue;
 
-			if(cells[row + i][column + j] == 'x')
+			if(cells[row + i][column + j].alive == true)
 				neighborCount++;
 		}
 	}

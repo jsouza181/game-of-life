@@ -5,11 +5,18 @@
 
 using namespace std;
 
+struct Cell
+{
+  bool alive;
+  bool active; // Will the cell change states next generation?
+  Cell() : alive(false), active(false) {}
+};
+
 class Grid
 {
   private:
     int width, height;
-    vector <vector <char> > cells;
+    vector <vector <Cell> > cells;
   public:
     Grid (int xDimension, int yDimension);
     void print();
