@@ -22,6 +22,7 @@ class Grid
     void print();
     void step();
     int findLiveNeighbors(int row, int column);
+    void randomizeGrid();
 };
 
 #endif

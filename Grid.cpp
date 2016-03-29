@@ -1,4 +1,6 @@
+#include <chrono>
 #include <iostream>
+#include <random>
 #include "Grid.h"
 
 Grid::Grid (int xDimension, int yDimension)
@@ -7,21 +9,25 @@ Grid::Grid (int xDimension, int yDimension)
 	height = yDimension;
 	//Resize the grid to accomadate user-provided dimensions.
 	cells.resize(height, vector<Cell>(width, Cell()) );
+
+	randomizeGrid();
+
 }
 
 void Grid::print ()
 {
-	for (int i = 0; i < height; ++i)
+	for(auto& i : cells)
 	{
-		for (int j = 0; j < width; ++j)
+		for(auto& cell : i)
 		{
-			if(cells[i][j].alive == true)
+			if(cell.alive == true)
 				cout << 'x';
 			else
 				cout << ' ';
 		}
-		cout << endl;
+		cout << '\n';
 	}
+	cout << endl;
 }
 
 // Advance the simulation one generation.
@@ -33,10 +39,6 @@ void Grid::step ()
 	{
 		for (int j = 0; j < width; ++j)
 		{
-			//TESTING:
-			if(i > 4 && i < 7 && j > 4 && j < 9)
-				cells[i][j].alive = true;
-
 			if(cells[i][j].alive == false) // Cell is dead
 			{
 				if(findLiveNeighbors(i, j) == 3)
@@ -47,8 +49,11 @@ void Grid::step ()
 
 			}
 		}
-		cout << endl;
 	}
+/*
+	for(auto& i : cells)
+		for(aut&j : i)
+	*/
 }
 
 // Find the number of live neighbors for a given cell
@@ -73,4 +78,21 @@ int Grid::findLiveNeighbors(int row, int column)
 	}
 
 	return neighborCount;
+}
+
+// Randomly populate cells to setup starting pattern.
+void Grid::randomizeGrid()
+{
+	unsigned seed = chrono::steady_clock::now().time_since_epoch().count();
+	default_random_engine generator(seed);
+	uniform_int_distribution<int> distribution(0, 1);
+
+	for(auto& i : cells)
+	{
+		for(auto& cell : i)
+		{
+			if(distribution(generator) == 1)
+				cell.alive = true;
+		}
+	}
 }

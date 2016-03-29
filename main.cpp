@@ -21,9 +21,10 @@ int main(int argc, char ** argv)
 	stringstream(argv[3]) >> numGens;
 
 	Grid displayGrid(width, height);
+	displayGrid.step();
 	displayGrid.print();
 
-	while(numGens > 0)
+	while(numGens > 1)
 	{
 		displayGrid.step();
 		displayGrid.print();
