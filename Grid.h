@@ -14,6 +14,7 @@ class Grid
     Grid (int xDimension, int yDimension);
     void print();
     void step();
+    int findLiveNeighbors(int row, int column);
 };
 
 #endif
