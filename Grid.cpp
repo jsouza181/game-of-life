@@ -16,9 +16,10 @@ Grid::Grid (int xDimension, int yDimension)
 
 void Grid::print ()
 {
-	for(auto& i : cells)
+	cout << "\n\n\n\n\n";
+	for(auto i : cells)
 	{
-		for(auto& cell : i)
+		for(auto cell : i)
 		{
 			if(cell.alive == true)
 				cout << 'x';
@@ -39,21 +40,35 @@ void Grid::step ()
 	{
 		for (int j = 0; j < width; ++j)
 		{
+			int neighborCount = findLiveNeighbors(i, j);
+
 			if(cells[i][j].alive == false) // Cell is dead
 			{
-				if(findLiveNeighbors(i, j) == 3)
-					cells[i][j].alive = true;
+				if(neighborCount == 3)
+					cells[i][j].active = true;
 			}
 			else // Cell is alive
 			{
-
+				if(neighborCount < 2 || neighborCount > 3)
+					cells[i][j].active = true;
 			}
 		}
 	}
-/*
+
+	// Change the states of all cells that were set to change.
 	for(auto& i : cells)
-		for(aut&j : i)
-	*/
+		for(auto& cell : i)
+		{
+			if(cell.active == true)
+			{
+				if(cell.alive == true)
+					cell.alive = false;
+				else
+					cell.alive = true;
+
+				cell.active = false;
+			}
+		}
 }
 
 // Find the number of live neighbors for a given cell
@@ -81,17 +96,18 @@ int Grid::findLiveNeighbors(int row, int column)
 }
 
 // Randomly populate cells to setup starting pattern.
+// Cells are more likely to be generated as dead than alive.
 void Grid::randomizeGrid()
 {
 	unsigned seed = chrono::steady_clock::now().time_since_epoch().count();
 	default_random_engine generator(seed);
-	uniform_int_distribution<int> distribution(0, 1);
+	uniform_int_distribution<int> distribution(0, 7);
 
 	for(auto& i : cells)
 	{
 		for(auto& cell : i)
 		{
-			if(distribution(generator) == 1)
+			if(distribution(generator) == 0)
 				cell.alive = true;
 		}
 	}

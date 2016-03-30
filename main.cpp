@@ -1,6 +1,8 @@
+#include <chrono>
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <thread>
 #include "Grid.h"
 
 using namespace std;
@@ -27,6 +29,7 @@ int main(int argc, char ** argv)
 	while(numGens > 1)
 	{
 		displayGrid.step();
+		this_thread::sleep_for(chrono::milliseconds(1000));
 		displayGrid.print();
 		numGens--;
 	}
